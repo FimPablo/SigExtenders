@@ -1,0 +1,27 @@
+{
+    "name": "fim-pablo/sig-extenders",
+    "description": "Extenders para os projetos da Sigcorp",
+    "version": "1.0",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "FimPablo\\SigExtenders\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Pablo Fim",
+            "email": "pablo.fim123@hotmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.1",
+        "doctrine/dbal": "*",
+        "guzzlehttp/guzzle": "^7.2",
+        "laravel/framework": "^10.0",
+        "stancl/tenancy": "*",
+        "tymon/jwt-auth": "^2.1"
+    }
+}
