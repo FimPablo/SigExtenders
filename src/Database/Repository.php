@@ -117,7 +117,7 @@ class Repository
         return $model->delete();
     }
 
-    protected function buildQuery(bool $canRetunDeleted, Builder &$query, array $modelInfo, string $orderBy = null, bool $filterNull = true, $having = [])
+    protected function buildQuery(bool $canRetunDeleted, Builder &$query, array $modelInfo, string|array|null $orderBy = null, bool $filterNull = true, $having = [])
     {
         if (!$canRetunDeleted)
             $query->whereNotDeleted();
@@ -133,14 +133,27 @@ class Repository
         Arr::each($hases, fn($info, $key) => $this->buildWhereHasClause($query, $key, $info));
 
         if ($orderBy)
-            $query->orderBy($orderBy);
+            $this->ordenateQuery($query, $orderBy);
 
         return $modelInfo;
     }
 
+    private function ordenateQuery(Builder &$query, string|array $orderBy)
+    {
+        if (!is_array($orderBy)) {
+            $orderBy = explode(', ', $orderBy);
+        }
+
+        Arr::each($orderBy, function ($order) use ($query) {
+            $order = explode(' ', $order);
+            $function = isset ($order[1]) && $order[1] == 'DESC' ? 'orderByDesc' : 'orderBy';
+            $query->$function($order[0]);
+        });
+
+    }
+
     private function evaluateRelationsInSearch(array $modelInfo)
     {
-
         $evaluatedArray = [];
 
         Arr::each(
