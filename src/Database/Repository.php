@@ -20,7 +20,7 @@ class Repository
         }
     }
 
-    public function find(array $modelInfo, array $relations = [], bool $canRetunDeleted = false, string $orderBy = null, array $having = [])
+    public function find(array $modelInfo, array $relations = [], bool $canRetunDeleted = false, string|array|null $orderBy = null, array $having = [])
     {
         return $this->buildFindQuery($modelInfo, $relations, $canRetunDeleted, $orderBy, $having)->first();
     }
@@ -31,7 +31,7 @@ class Repository
         return $query->exists();
     }
 
-    public function findAll(array $modelInfo, array $relations = [], bool $canRetunDeleted = false, string $orderBy = null, array $having = []): Collection
+    public function findAll(array $modelInfo, array $relations = [], bool $canRetunDeleted = false, string|array|null $orderBy = null, array $having = []): Collection
     {
         return $this->buildFindQuery($modelInfo, $relations, $canRetunDeleted, $orderBy, $having)->get();
     }
@@ -42,7 +42,7 @@ class Repository
         return $query->chunk($chunkSize, $processChunk);
     }
 
-    public function listAll(array $modelInfo, array $relations = [], bool $paginate = true, bool $canRetunDeleted = false, string $orderBy = null, array $having = []): Collection|LengthAwarePaginator
+    public function listAll(array $modelInfo, array $relations = [], bool $paginate = true, bool $canRetunDeleted = false, string|array|null $orderBy = null, array $having = []): Collection|LengthAwarePaginator
     {
         $query = $this->buildFindQuery($modelInfo, $relations, $canRetunDeleted, $orderBy, $having);
 
@@ -175,7 +175,7 @@ class Repository
         return $evaluatedArray;
     }
 
-    private function buildFindQuery(array $modelInfo, array $relations = [], bool $canRetunDeleted = false, string $orderBy = null, $having): Builder|ExternalBuilder
+    private function buildFindQuery(array $modelInfo, array $relations = [], bool $canRetunDeleted = false, string|array|null $orderBy = null, $having): Builder|ExternalBuilder
     {
         $query = $this->relatedModel::query()
             ->with($relations);
