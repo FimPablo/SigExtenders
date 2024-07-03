@@ -36,7 +36,7 @@ class JWTAuth extends BaseJWTAuth
             throw new DomainException('Pessoa não encontrada no token da requisição', 404);
         }
 
-        return (int) $payload['PESID'];
+        return $payload['PESID'];
     }
 
     public static function getAcessPesid(): string|int
@@ -51,7 +51,7 @@ class JWTAuth extends BaseJWTAuth
             throw new DomainException('Pessoa não encontrada no token da requisição', 404);
         }
 
-        return (int) $payload['LOGGED_AT'];
+        return $payload['LOGGED_AT'];
     }
 
     public static function getAccessGrpid()
@@ -66,7 +66,7 @@ class JWTAuth extends BaseJWTAuth
             throw new DomainException('GrupoOrigem não encontrado', 404);
         }
 
-        return (int) $payload['LOGGED_GRPID'];
+        return $payload['LOGGED_GRPID'];
     }
 
     private static function getTokenPayload($throw = true)
@@ -92,6 +92,6 @@ class JWTAuth extends BaseJWTAuth
 
     public static function isPersonificated()
     {
-        return (int) self::getAcessPesid() != (int) self::getLoggedPesid();
+        return self::getAcessPesid() != self::getLoggedPesid();
     }
 }
