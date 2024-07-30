@@ -60,7 +60,7 @@ class ExternalModelSocket
         );
 
         $files = new \RegexIterator($iterator, '/^.+\.php$/i', \RecursiveRegexIterator::GET_MATCH);
-        $file = Arr::where(Arr::flatten(iterator_to_array($files)), fn($filePath) => Str::endsWith($filePath, "\\{$fileName}.php"));
+        $file = Arr::where(Arr::flatten(iterator_to_array($files)), fn($filePath) => Str::endsWith($filePath, DIRECTORY_SEPARATOR . "{$fileName}.php"));
 
         if (empty($file)) {
             return false;
