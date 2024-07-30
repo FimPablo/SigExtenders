@@ -73,9 +73,7 @@ class Repository
     public function getById($id, array $relations = [], bool $canRetunDeleted = false)
     {
         $query = $this->relatedModel::query();
-        $query->where([
-            [$query->getModel()->getKeyName(), $id],
-        ]);
+        $query->where($query->getModel()->getKeyName(), $id);
 
         if (!$canRetunDeleted)
             $query->whereNotDeleted();
@@ -146,7 +144,7 @@ class Repository
 
         Arr::each($orderBy, function ($order) use ($query) {
             $order = explode(' ', $order);
-            $function = isset ($order[1]) && $order[1] == 'DESC' ? 'orderByDesc' : 'orderBy';
+            $function = isset($order[1]) && $order[1] == 'DESC' ? 'orderByDesc' : 'orderBy';
             $query->$function($order[0]);
         });
 
