@@ -1,7 +1,7 @@
 {
     "name": "fim-pablo/sig-extenders",
     "description": "Extenders para os projetos da Sigcorp",
-    "version": "1.10",
+    "version": "1.11",
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -17,11 +17,18 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": "^8.1",
+        "php": "^8.3",
         "doctrine/dbal": "*",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
         "stancl/tenancy": "*",
         "tymon/jwt-auth": "^2.1"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "FimPablo\\SigExtenders\\SigExtendersServiceProvider"
+            ]
+        }
     }
 }

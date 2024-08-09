@@ -42,9 +42,7 @@ class ExternalModelSocket
         $foundModel = self::findNamespaceForFile($modelName);
 
         if (!$foundModel) {
-            return response()->json([
-                'message' => 'Model not found',
-            ], 404);
+            throw new \DomainException("Model {$modelName} não encontrada no ambiente externo", 500);
         }
 
         $foundModel .= "\\{$modelName}";
