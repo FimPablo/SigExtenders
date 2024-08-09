@@ -1,6 +1,6 @@
 <?php
 
-namespace FimPablo\SigExtenders\Http\Cosntrollers;
+namespace FimPablo\SigExtenders\Http\Controllers;
 
 use FimPablo\SigExtenders\Helpers\Utils;
 use FimPablo\SigExtenders\Http\Requests\Socket\SocketRequest;

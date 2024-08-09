@@ -4,7 +4,7 @@ namespace FimPablo\SigExtenders;
 
 use Illuminate\Support\ServiceProvider;
 
-class YourPackageServiceProvider extends ServiceProvider
+class SigExtendersServiceProvider extends ServiceProvider
 {
     public function boot()
     {
