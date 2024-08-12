@@ -8,8 +8,16 @@ use FimPablo\SigExtenders\Utils\Arr;
 use Illuminate\Database\Eloquent\Model as ModelEloquent;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Classe responsável por adicionar a model padrão do laravel os métodos e atributos necessários para os sistemas.
+ */
 class Model extends ModelEloquent
 {
+    /**
+     * prefixo das colunas na base de dados.
+     *
+     * @var string
+     */
     public string $prefixColumns = '';
     public static $snakeAttributes = false;
     public $timestamps = false;
@@ -27,8 +35,8 @@ class Model extends ModelEloquent
             $model->unsetUnkownAttributes();
             $userId = JWTAuth::getLoggedUser()?->USUUID ?? 'Adicionado pelo sistema';
 
-            $columnIncluidoPor = $model->prefixColumns . 'INCLUIDOPOR';
-            $columnIncluidoEm = $model->prefixColumns . 'INCLUIDOEM';
+            $columnIncluidoPor = "{$model->prefixColumns}INCLUIDOPOR";
+            $columnIncluidoEm = "{$model->prefixColumns}INCLUIDOEM";
 
             $model->$columnIncluidoPor = (string) $userId;
             $model->$columnIncluidoEm = Carbon::now()->format('Y-m-d H:i');
@@ -38,14 +46,14 @@ class Model extends ModelEloquent
         static::updating(function ($model) {
             $model->unsetUnkownAttributes();
 
+            $userId = 'Alterado pelo sistema';
+
             if (JWTAuth::getToken() && JWTAuth::getPayload(JWTAuth::getToken())) {
                 $userId = JWTAuth::getPayload(JWTAuth::getToken())->get('USUUID');
-            } else {
-                $userId = 'Alterado pelo sistema';
             }
 
-            $columnAlteradoPor = $model->prefixColumns . 'ALTERADOPOR';
-            $columnAlteradoEm = $model->prefixColumns . 'ALTERADOEM';
+            $columnAlteradoPor = "{$model->prefixColumns}ALTERADOPOR";
+            $columnAlteradoEm = "{$model->prefixColumns}ALTERADOEM";
 
             $model->$columnAlteradoPor = (string) $userId;
             $model->$columnAlteradoEm = Carbon::now()->format('Y-m-d H:i');
@@ -53,7 +61,7 @@ class Model extends ModelEloquent
 
         static::deleting(function ($model) {
             $model->update([
-                $model->prefixColumns . 'EXCLUIDO' => 1,
+                "{$model->prefixColumns}EXCLUIDO" => 1,
             ]);
 
             return false;
@@ -62,12 +70,12 @@ class Model extends ModelEloquent
 
     public function scopeWhereNotDeleted($query)
     {
-        return $query->where($this->prefixColumns . 'EXCLUIDO', '!=', 1);
+        return $query->where("{$this->prefixColumns}EXCLUIDO", '!=', 1);
     }
 
     private function getColumns()
     {
-        return Schema::getColumnListing(($this)->getTable());
+        return Schema::getColumnListing($this->getTable());
     }
 
     public function getAllAttributes()
@@ -82,17 +90,26 @@ class Model extends ModelEloquent
 
     public function unsetUnkownAttributes()
     {
-        $this->attributes = Arr::mapWithKeys($this->attributes, function ($val, $attr) {
-            if (in_array($attr, $this->getAllAttributes())) {
-                return [$attr => $val];
-            }
+        $this->attributes = Arr::mapWithKeys(
+            $this->attributes,
+            /**
+             * @param mixed $val
+             * @param string $attr
+             * @return array
+             */
+            function ($val, $attr) {
+                if (in_array($attr, $this->getAllAttributes())) {
+                    return [$attr => $val];
+                }
 
-            if (in_array($this->prefixColumns . $attr, $this->getAllAttributes())) {
-                return [$this->prefixColumns . $attr => $val];
-            }
+                $attrWPrefix = "{$this->prefixColumns}$attr";
+                if (in_array($attrWPrefix, $this->getAllAttributes())) {
+                    return [$attrWPrefix => $val];
+                }
 
-            return [];
-        });
+                return [];
+            }
+        );
     }
 
     public static function newFromStatic($attributes = [])
