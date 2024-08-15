@@ -110,6 +110,7 @@ class Model extends ModelEloquent
                 return [];
             }
         );
+        return $this;
     }
 
     public static function newFromStatic($attributes = [])

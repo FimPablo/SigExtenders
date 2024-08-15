@@ -85,7 +85,7 @@ class Repository
 
     public function update(&$model, array $data, bool $filterNull = true): bool
     {
-        $this->filterModel($data, $filterNull);
+        $this->filterModel($model, $data, $filterNull);
 
         $sts = $model->update($data);
         $key = $model->getKeyName();
@@ -95,7 +95,7 @@ class Repository
 
     public function updateUnique(&$model, array $data, array $withUnique = [], bool $filterNull = true): bool
     {
-        $this->filterModel($data, $filterNull);
+        $this->filterModel($model, $data, $filterNull);
         $key = $model->getKeyName();
 
         $finded = $this->find(
@@ -124,7 +124,7 @@ class Repository
         $hases = array_merge($hases, $having);
 
         if (!($query instanceof ExternalBuilder))
-            $this->filterModel($modelInfo, $filterNull);
+            $this->filterModel($query->getModel(), $modelInfo, $filterNull);
 
 
         Arr::each($modelInfo, fn($info, $key) => $this->buildWhereClause($query, $key, $info));
@@ -223,12 +223,12 @@ class Repository
             ->whereHas($key, fn($qry) => $this->buildQuery(false, $qry, $value));
     }
 
-    private function filterModel(&$modelInfo, $filterNull)
+    private function filterModel($model, &$modelInfo, $filterNull)
     {
-        $ghostModel = $this->relatedModel::newFromStatic($modelInfo);
-
-        $ghostModel->unsetUnkownAttributes();
-        $clearModelInfo = $ghostModel->toArray();
+        $clearModelInfo = $model
+            ->newFromStatic($modelInfo)
+            ->unsetUnkownAttributes()
+            ->toArray();
 
         $modelInfo = $filterNull ? Arr::whereNotNull($clearModelInfo) : $clearModelInfo;
     }
