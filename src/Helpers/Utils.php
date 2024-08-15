@@ -112,4 +112,28 @@ class Utils
             'message' => $e->getMessage(),
         ], $code);
     }
+
+    public static function validateReturn(string $returnMessage, $data, int $httpStatus = Response::HTTP_OK): JsonResponse
+    {
+        if (!$data || (is_iterable($data) && count($data) == 0)) {
+            return response()->json([
+                'message' => 'Registros não encontrados!',
+                'data' => [],
+            ], $httpStatus);
+        }
+
+        return response()->json([
+            'message' => $returnMessage,
+            'data' => $data,
+        ], $httpStatus);
+    }
+
+    public static function upperSnakeToLowerCamel($string)
+    {
+        $string = strtolower($string);
+        $string = str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
+        $string = lcfirst($string);
+
+        return $string;
+    }
 }
