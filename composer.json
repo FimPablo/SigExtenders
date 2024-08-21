@@ -1,7 +1,7 @@
 {
     "name": "fim-pablo/sig-extenders",
     "description": "Extenders para os projetos da Sigcorp",
-    "version": "1.24",
+    "version": "1.25",
     "type": "library",
     "license": "MIT",
     "autoload": {
